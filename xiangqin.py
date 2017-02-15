@@ -25,9 +25,20 @@ def getDetail(url):
     detail=soup.find_all(class_='p-entry')
     soupdetail=BeautifulSoup(str(detail),'lxml')
     soupdetail.find_all('p')
-    for item  in soupdetail:
-        print(item.get_text())
-    print(detail)
+    details=''
+
+    for item  in soupdetail.get_text().split('\n'):
+        #details+=soupdetail.get_text().replace(' ', '')
+        if '：' in item:
+            s=item.split('：')[1].replace('[','').replace("登录后查看»	]","").replace(' ', '')+'\t'
+            details+=s
+            print(s)
+        else:
+            details+=item.replace('[','').replace("登录后查看»	]","").strip()
+    #print(details)
+    return  details
+
+    #print(content)
 
 if __name__ == '__main__':
     # i=1
@@ -39,4 +50,13 @@ if __name__ == '__main__':
     #     i=i+1
     # fr = codecs.open ( 'content.txt', 'w', 'utf_8' )
     # fr.write(content)
-    getDetail("http://date.jobbole.com/3849/")
+    fr = codecs.open ( 'content.txt', 'r' , 'utf_8')
+    content=''
+    while 1:
+        line = fr.readline()
+        if not line:
+            break
+        print(line)
+        content+=getDetail(line.split('\t')[0])+'\n'
+    fw = codecs.open ( 'details.txt', 'w', 'utf_8' )
+    fw.write(content)
